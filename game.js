@@ -5,9 +5,8 @@ var audio;
 var userClickedPattern = [];
 var init = false;
 var level = 0;
-var backgroundPattern = ["#0d1b2a", "#1b263b", "#415a77", "#778da9"];
-var b = 0;
-
+var i = 0;
+var salir = true;
 
 $("body").keypress(function(event){ //tambien en lugar de body puede ser document sin comillas
   if (!init){
@@ -27,16 +26,6 @@ $(".btn").click(function(){
   animatePress(userChosenColour);
   checkAnswer(userClickedPattern.length - 1);
 })
-
-// $("body").click(function(){
-//   if(!init){
-//     $("background").css("background-color", backgroundPattern[b]);
-//     b++;
-//     if(b == 3){
-//       b = 0;
-//     }
-//   }
-// })
 
 ////////// Funciones //////////
 
@@ -68,7 +57,9 @@ function  animatePress(currentColour){
 function checkAnswer(currentLevel){
   if(userClickedPattern.length == gamePattern.length){
     setTimeout(function(){
-      nextsequence();
+      console.log("ver secuencia")
+      viewSequence();
+      console.log("fin secuencia");
       userClickedPattern = [];
     }, 1000);
   }
@@ -76,12 +67,8 @@ function checkAnswer(currentLevel){
   if (userClickedPattern[currentLevel] == gamePattern[currentLevel]){
     console.log("success");
   }else{
-    console.log(userClickedPattern);
-    console.log(gamePattern);
     startOver();
   }
-
-
 }
 
 function startOver(){
@@ -99,4 +86,27 @@ function startOver(){
   init = false;
 }
 
-////////// Constructor //////////
+function viewSequence(){
+  var viewPattern = "";
+
+
+  setTimeout(function(){
+    viewPattern = "#" + gamePattern[i];
+    $(viewPattern).fadeOut(100).fadeIn(100);
+    viewPattern = viewPattern.substr(1);
+    console.log("mostrando" + i + viewPattern);
+    playSound(viewPattern);
+    i++
+    if(i<gamePattern.length){
+      viewSequence();
+    }else{
+      i=0;
+      console.log("nueva secuencia");
+      setTimeout(function(){
+        nextsequence();
+      },700);
+
+    }
+  },1000);
+
+}
